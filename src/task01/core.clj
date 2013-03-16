@@ -3,6 +3,24 @@
   (:gen-class))
 
 
+; индексы внутри элемента html
+(def html:attributes 1)
+(def html:sub-element0 2)
+
+(defn scan-links [html-data]
+    (let [; выполнить функцию на вложенных элементах и отфильтровать мусор
+          other-links (flatten (filter seq (map scan-links (filter vector? html-data))))
+          ; получить значение атрибута class елемента текущего уровня в html-data
+          html-att-class (:class (get html-data html:attributes))]
+      ; этот элемент содержит {:class \"r\"} ?
+      (if (= "r" html-att-class)
+          ; да. извлечь href из вложенного элемента :a
+          (let [href-str (:href (get (get html-data html:sub-element0) html:attributes))]
+            ; добавить href в голову списка
+            (cons href-str other-links))
+          ; нет. передать полученные ссылки или пустой список вызывающей функции
+          other-links)))
+
 (defn get-links []
 " 1) Find all elements containing {:class \"r\"}.
 
@@ -21,9 +39,10 @@ The link from the example above is 'https://github.com/clojure/clojure'.
 Example: ['https://github.com/clojure/clojure', 'http://clojure.com/', . . .]
 "
   (let [data (parse "clojure_google.html")]
-    nil))
+    (vec (scan-links data))))
 
 (defn -main []
+  (println (str "Links: " (get-links)))
   (println (str "Found " (count (get-links)) " links!")))
 
 
