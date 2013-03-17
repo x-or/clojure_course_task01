@@ -10,7 +10,7 @@
 (defn scan-links [html-data]
     (let [; выполнить функцию на вложенных элементах и избавиться от вложения списков
           ; пустые подспиcки также удаляются
-          other-links (flatten (map scan-links (filter vector? html-data)))
+          other-links (mapcat scan-links (filter vector? html-data))
           ; получить значение атрибута class елемента текущего уровня в html-data
           html-att-class (:class (get html-data html:attributes))]
       ; этот элемент содержит {:class \"r\"} ?
