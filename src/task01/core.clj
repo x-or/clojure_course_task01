@@ -5,7 +5,7 @@
 
 ; индексы внутри элемента html
 (def html-attributes 1)
-(def html-sub-element0 2)
+(def html-child-0 2)
 
 (defn scan-links [html-data]
     (let [; выполнить функцию на вложенных элементах и избавиться от вложения списков
@@ -16,7 +16,7 @@
       ; этот элемент содержит {:class \"r\"} ?
       (if (= "r" html-att-class)
           ; да. извлечь href из вложенного элемента :a
-          (let [href-str (get-in html-data [html-sub-element0 html-attributes :href])]
+          (let [href-str (get-in html-data [html-child-0 html-attributes :href])]
             ; добавить href в голову списка
             (cons href-str other-links))
           ; нет. передать полученные ссылки или пустой список вызывающей функции
